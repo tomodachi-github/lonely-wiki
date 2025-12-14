@@ -43,9 +43,7 @@
       "buildResources": "assets",
       "output": "release"
     },
-    "icon": "assets/icon.png",
     "win": {
-      "icon": "assets/icon.png",
       "target": [
         {
           "target": "nsis",
