@@ -16,9 +16,12 @@ jobs:
           node-version: '18'
       
       - name: Install build tools
+        shell: powershell
         run: |
           choco install visualstudio2022-workload-vctools visualstudio2022-workload-nativedesktop -y
-          refreshenv
+          # Refresh environment variables properly in PowerShell
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+          Write-Host "Environment variables refreshed"
       
       - name: Clear npm cache
         run: npm cache clean --force
