@@ -46,9 +46,7 @@
       "buildResources": "assets",
       "output": "release"
     },
-    "icon": "assets/icon.svg",
     "win": {
-      "icon": "assets/icon.svg",
       "target": [
         {
           "target": "nsis",
@@ -74,7 +72,6 @@
       "shortcutName": "Lonely Wiki"
     },
     "mac": {
-      "icon": "assets/icon.svg",
       "target": [
         "dmg",
         "zip"
