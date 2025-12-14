@@ -1,16 +1,11 @@
-name: Build and Release
+name: Build and Release (Windows)
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-2022, macos-latest]
+    runs-on: windows-2022
     
     steps:
       - uses: actions/checkout@v3
@@ -20,17 +15,7 @@ jobs:
         with:
           node-version: '18'
       
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      
-      - name: Install setuptools (for sqlite3 on macOS)
-        if: runner.os == 'macOS'
-        run: pip install setuptools
-      
-      - name: Install build tools (Windows)
-        if: runner.os == 'Windows'
+      - name: Install build tools
         run: |
           choco install visualstudio2022-workload-vctools visualstudio2022-workload-nativedesktop -y
           refreshenv
@@ -79,10 +64,6 @@ jobs:
         with:
           files: |
             release/*.exe
-            release/*.dmg
-            release/*.zip
-            release/*.AppImage
-            release/*.deb
           draft: false
           prerelease: false
         env:

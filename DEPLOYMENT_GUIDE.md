@@ -36,47 +36,42 @@ git tag -a v0.2.0 -m "Release v0.2.0"
 git push origin main --tags
 ```
 
-## 🚀 自動リリースパイプライン
+## 🚀 ビルドパイプライン
 
-GitHub Actions により、タグをプッシュすると自動的にビルドが開始されます。
+Lonely Wiki は GitHub Actions で Windows 向けのビルドをサポートしています。
 
 ### ワークフロー（.github/workflows/build.yml）
 
-1. **トリガー**: `v*` タグがプッシュされた時
-2. **ビルド**: 3 つの OS（Ubuntu, Windows, macOS）で並列ビルド
-3. **アップロード**: 成果物を GitHub Release にアップロード
-4. **公開**: リリースを自動公開
+**トリガー方法:**
+- GitHub Actions タブから手動で実行（`workflow_dispatch`）
 
-### GitHub Actions の設定
+**ビルド実行環境:**
+- Windows (windows-2022)
 
-リポジトリ設定で、以下を確認してください：
+**実行内容:**
+1. Node.js 18 をセットアップ
+2. Visual Studio 2022 C++ ビルドツールをインストール
+3. npm 依存関係をインストール
+4. SQLite3 のネイティブコンパイル
+5. React コンポーネントを Vite でバンドル
+6. Electron Builder で Windows インストーラーを生成
+7. リリースアセットを GitHub Release にアップロード
 
-- **Settings > Actions** - ワークフロー権限: 「すべてのアクション」
-- **Settings > Secrets** - `GITHUB_TOKEN` は自動設定済み
-
-## 📥 手動ビルド（CI/CD 不使用時）
-
-### Linux でビルド
-
-```bash
-npm install
-npm run db:init
-npm run build:linux
-# release/ に成果物が生成される
-```
+## 📥 手動ビルド（ローカル実行）
 
 ### Windows でビルド（Windows OS 上で実行）
 
 ```bash
+# 依存関係をインストール
+npm install
+
+# データベーススキーマを初期化
+npm run db:init
+
+# Windows ビルドを実行
 npm run build:win
+
 # release/ に .exe ファイルが生成される
-```
-
-### macOS でビルド（macOS 上で実行）
-
-```bash
-npm run build:mac
-# release/ に .dmg ファイルが生成される
 ```
 
 ## 🔐 コード署名（本番環境推奨）
@@ -93,30 +88,6 @@ export WIN_CSC_KEY_PASSWORD="certificate_password"
 # ビルド
 npm run build:win
 ```
-
-### macOS コード署名・公証
-
-```bash
-# Apple Developer アカウントが必須
-
-# 署名用の identity を確認
-security find-identity -v -p codesigning
-
-# 環境変数を設定
-export APPLE_ID="your-apple-id@example.com"
-export APPLE_ID_PASSWORD="app-specific-password"
-export APPLE_TEAM_ID="XXXXXXXXXX"
-export CSC_IDENTITY_AUTO_DISCOVERY=true
-
-# ビルド
-npm run build:mac
-```
-
-## 📤 GitHub Release への公開
-
-### 自動公開（GitHub Actions 使用時）
-
-タグをプッシュすると、GitHub Actions が自動的に以下を実行します：
 
 1. 全プラットフォームをビルド
 2. `release/` の成果物をアップロード

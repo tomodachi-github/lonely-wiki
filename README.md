@@ -6,7 +6,7 @@
 [![React](https://img.shields.io/badge/React-18.3-61DAFB.svg)](https://react.dev/)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57.svg)](https://www.sqlite.org/)
 
-**Lonely Wiki** は、インターネット接続不要の個人用 Markdown Wiki アプリケーションです。Electron でビルドされた完全なオフライン・デスクトップアプリケーションで、Windows、macOS、Linux で動作します。
+**Lonely Wiki** は、インターネット接続不要の個人用 Markdown Wiki アプリケーションです。Electron でビルドされた完全なオフライン・デスクトップアプリケーションで、Windows で動作します。
 
 ## ✨ 主な機能
 
@@ -39,30 +39,13 @@
 
 ### ダウンロード
 
-最新の[リリース](https://github.com/tomodachi-github/lonely-wiki/releases)からお使いのプラットフォーム用をダウンロードしてください。
-
-- **Windows**: `.exe` ファイル（インストーラーまたはポータブル版）
-- **macOS**: `.dmg` ファイル
-- **Linux**: `.AppImage` または `.deb` ファイル
+最新の[リリース](https://github.com/tomodachi-github/lonely-wiki/releases)から Windows 用の `.exe` ファイルをダウンロードしてください。
 
 ### インストール
 
-#### Windows
-- `.exe` をダブルクリックして実行
-
-#### macOS
-- `.dmg` をダブルクリック → アプリケーションフォルダにドラッグ
-
-#### Linux (AppImage)
-```bash
-chmod +x Lonely\ Wiki-*.AppImage
-./Lonely\ Wiki-*.AppImage
-```
-
-#### Linux (Debian)
-```bash
-sudo apt install ./lonely-wiki_*.deb
-```
+1. `.exe` ファイルをダウンロード
+2. ダブルクリックして実行
+3. インストールウィザードに従ってインストール完了
 
 ## 📖 使い方
 
@@ -108,13 +91,8 @@ npm run build:all
 ### ビルドコマンド
 
 ```bash
-# すべてのプラットフォーム
-npm run build:all
-
-# プラットフォーム別
-npm run build:win     # Windows
-npm run build:mac     # macOS
-npm run build:linux   # Linux
+# Windows のみ
+npm run build:win
 ```
 
 詳細は [BUILD_GUIDE.md](BUILD_GUIDE.md) を参照してください。
