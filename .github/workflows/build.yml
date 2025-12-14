@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-2022, macos-latest]
     
     steps:
       - uses: actions/checkout@v3
@@ -28,6 +28,15 @@ jobs:
       - name: Install setuptools (for sqlite3 on macOS)
         if: runner.os == 'macOS'
         run: pip install setuptools
+      
+      - name: Install build tools (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install visualstudio2022-workload-vctools visualstudio2022-workload-nativedesktop -y
+          refreshenv
+      
+      - name: Clear npm cache
+        run: npm cache clean --force
       
       - name: Install dependencies
         run: npm install
