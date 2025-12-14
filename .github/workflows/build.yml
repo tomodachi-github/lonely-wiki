@@ -20,6 +20,15 @@ jobs:
         with:
           node-version: '18'
       
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install setuptools (for sqlite3 on macOS)
+        if: runner.os == 'macOS'
+        run: pip install setuptools
+      
       - name: Install dependencies
         run: npm install
       
