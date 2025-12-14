@@ -1,0 +1,178 @@
+.MarkdownPreview {
+  height: 100%;
+  overflow-y: auto;
+  border-left: 1px solid #444;
+  padding: 0;
+}
+
+.preview-content {
+  padding: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+/* Markdown HTML Elements */
+.preview-content h1,
+.preview-content h2,
+.preview-content h3,
+.preview-content h4,
+.preview-content h5,
+.preview-content h6 {
+  color: #646cff;
+  margin: 1.5rem 0 0.75rem 0;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(100, 108, 255, 0.3);
+  padding-bottom: 0.5rem;
+}
+
+.preview-content h1 {
+  font-size: 2rem;
+}
+
+.preview-content h2 {
+  font-size: 1.6rem;
+}
+
+.preview-content h3 {
+  font-size: 1.3rem;
+}
+
+.preview-content h4 {
+  font-size: 1.1rem;
+}
+
+.preview-content h5,
+.preview-content h6 {
+  font-size: 1rem;
+}
+
+.preview-content p {
+  margin: 0.75rem 0;
+}
+
+.preview-content ul,
+.preview-content ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+.preview-content li {
+  margin: 0.3rem 0;
+}
+
+.preview-content blockquote {
+  border-left: 4px solid #646cff;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  background-color: rgba(100, 108, 255, 0.05);
+  padding: 0.5rem 0 0.5rem 1rem;
+}
+
+.preview-content code {
+  background-color: #2a2a2a;
+  color: #89d96f;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.preview-content pre {
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.preview-content pre code {
+  background-color: transparent;
+  color: #89d96f;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.95em;
+  line-height: 1.5;
+}
+
+.preview-content a {
+  color: #646cff;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-bottom 0.3s;
+}
+
+.preview-content a:hover {
+  border-bottom: 1px solid #646cff;
+}
+
+.preview-content table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.preview-content th,
+.preview-content td {
+  border: 1px solid #444;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.preview-content th {
+  background-color: #2a2a2a;
+  color: #646cff;
+  font-weight: 600;
+}
+
+.preview-content tr:hover {
+  background-color: rgba(100, 108, 255, 0.05);
+}
+
+.preview-content hr {
+  border: none;
+  border-top: 1px solid #444;
+  margin: 2rem 0;
+}
+
+.preview-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+
+.preview-content strong {
+  color: #646cff;
+  font-weight: 600;
+}
+
+.preview-content em {
+  color: rgba(100, 108, 255, 0.8);
+  font-style: italic;
+}
+
+.preview-content del {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+/* スクロールバーのスタイル */
+.MarkdownPreview::-webkit-scrollbar {
+  width: 8px;
+}
+
+.MarkdownPreview::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.MarkdownPreview::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+
+.MarkdownPreview::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
