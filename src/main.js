@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, crashReporter } from 'electron'
 import { createRequire } from 'module'
 import { fileURLToPath } from 'url'
 import path from 'path'
@@ -6,6 +6,31 @@ import fs from 'fs'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// ========== Electron クラッシュレポート初期化 ==========
+try {
+  const crashDumpDir = path.join(
+    process.env.APPDATA || process.env.HOME,
+    'lonely-wiki-crashes'
+  )
+  
+  if (!fs.existsSync(crashDumpDir)) {
+    fs.mkdirSync(crashDumpDir, { recursive: true })
+  }
+  
+  crashReporter.start({
+    productName: 'Lonely Wiki',
+    companyName: 'Lonely Wiki Contributors',
+    submitURL: '', // ローカルのみに保存
+    uploadToServer: false
+  })
+  
+  // クラッシュダンプディレクトリを設定
+  app.setPath('crashDumps', crashDumpDir)
+  console.log(`クラッシュレポート保存先: ${crashDumpDir}`)
+} catch (err) {
+  console.error('クラッシュレポート初期化エラー:', err)
+}
 
 // ========== ログ初期化（最優先：すべてのエラーをキャッチ） ==========
 let logDir
