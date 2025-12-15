@@ -3,35 +3,94 @@ import { createRequire } from 'module'
 import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs'
-import { initializeDatabase } from './db/database.js'
-import { setupIPCHandlers } from './ipc-handlers.js'
-import { setupAutoUpdate } from './auto-updater.js'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// ログファイルパス（ユーザーのアプリデータディレクトリ）
-const logDir = path.join(app.getPath('userData'), 'logs')
-const logFile = path.join(logDir, `app-${new Date().toISOString().split('T')[0]}.log`)
+// ========== ログ初期化（最優先：すべてのエラーをキャッチ） ==========
+let logDir
+let logFile
 
-// ログディレクトリを作成
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir, { recursive: true })
+function initializeLogging() {
+  logDir = path.join(app.getPath('userData'), 'logs')
+  logFile = path.join(logDir, `app-${new Date().toISOString().split('T')[0]}.log`)
+  
+  try {
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true })
+    }
+  } catch (err) {
+    console.error('ログディレクトリ作成失敗:', err)
+  }
 }
 
-// ログ関数
 function writeLog(message) {
   const timestamp = new Date().toISOString()
   const logMessage = `[${timestamp}] ${message}\n`
   console.log(message)
-  fs.appendFileSync(logFile, logMessage)
+  
+  if (logFile) {
+    try {
+      fs.appendFileSync(logFile, logMessage)
+    } catch (err) {
+      console.error('ログ書き込み失敗:', err)
+    }
+  }
 }
 
-// グローバルエラーハンドラー
+// モジュール読み込みエラーをキャッチ
 process.on('uncaughtException', (error) => {
-  writeLog(`❌ キャッチされないエラー: ${error.message}`)
-  writeLog(`スタックトレース: ${error.stack}`)
+  const message = `❌ キャッチされないエラー: ${error.message}\nスタックトレース: ${error.stack}`
+  console.error(message)
+  
+  // ログファイルに直接書き込み（writeLog が使えない場合用）
+  if (logFile) {
+    try {
+      const timestamp = new Date().toISOString()
+      fs.appendFileSync(logFile, `[${timestamp}] ${message}\n`)
+    } catch (e) {
+      console.error('エラーログ記録失敗:', e)
+    }
+  }
 })
+
+process.on('unhandledRejection', (reason, promise) => {
+  const message = `❌ ハンドルされない Promise Rejection: ${reason}`
+  console.error(message)
+  writeLog(message)
+})
+
+// ========== モジュール読み込み（ログ初期化後） ==========
+let initializeDatabase
+let setupIPCHandlers
+let setupAutoUpdate
+
+try {
+  const { initializeDatabase: initDB } = await import('./db/database.js')
+  const { setupIPCHandlers: setupIPC } = await import('./ipc-handlers.js')
+  const { setupAutoUpdate: setupAU } = await import('./auto-updater.js')
+  
+  initializeDatabase = initDB
+  setupIPCHandlers = setupIPC
+  setupAutoUpdate = setupAU
+} catch (importErr) {
+  console.error('❌ モジュール読み込みエラー:', importErr.message)
+  console.error('スタックトレース:', importErr.stack)
+  
+  // 緊急ログ：ファイルに直接書き込み
+  const emergencyLogDir = path.join(process.env.APPDATA || process.env.HOME, 'lonely-wiki-logs')
+  try {
+    fs.mkdirSync(emergencyLogDir, { recursive: true })
+    const emergencyLog = path.join(emergencyLogDir, 'startup-error.log')
+    const timestamp = new Date().toISOString()
+    fs.appendFileSync(emergencyLog, `[${timestamp}] モジュール読み込みエラー: ${importErr.message}\n${importErr.stack}\n`)
+    console.log(`緊急ログを記録しました: ${emergencyLog}`)
+  } catch (e) {
+    console.error('緊急ログ記録失敗:', e)
+  }
+  
+  process.exit(1)
+}
 
 let mainWindow
 
@@ -69,7 +128,9 @@ function createWindow() {
 }
 
 app.on('ready', async () => {
+  initializeLogging()
   writeLog('🚀 アプリケーション起動中...')
+  
   try {
     // 自動更新機能の初期化
     const updateInfo = await setupAutoUpdate()
