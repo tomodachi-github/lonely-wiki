@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 import { v4 as uuidv4 } from 'uuid'
-import { getDatabase } from './database.js'
+import { getDatabase } from './db/database.js'
 
 export function setupIPCHandlers() {
   // 記事一覧取得

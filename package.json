@@ -9,13 +9,17 @@
   "scripts": {
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
+    "test:imports": "node test-imports.js",
+    "test:modules": "node test-module-loading.js",
+    "test:asar": "node test-asar-structure.js",
+    "test": "npm run test:imports",
     "dev": "concurrently \"npm run dev:vite\" \"wait-on http://localhost:5173 && electron .\"",
     "dev:vite": "vite",
     "db:init": "node src/db/init.js",
-    "build": "npm run lint && npm run db:init && npm run build:vite && npm run build:electron",
+    "build": "npm run lint && npm run test:imports && npm run db:init && npm run build:vite && npm run build:electron",
     "build:vite": "vite build",
     "build:electron": "electron-builder --publish never",
-    "build:win": "npm run lint && npm run db:init && npm run build:vite && electron-builder --win --publish never",
+    "build:win": "npm run lint && npm run test:imports && npm run db:init && npm run build:vite && electron-builder --win --publish never",
     "preview": "vite preview"
   },
   "dependencies": {

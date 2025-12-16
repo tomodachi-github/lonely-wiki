@@ -35,6 +35,9 @@ jobs:
       - name: Lint code
         run: npm run lint
       
+      - name: Test import paths
+        run: npm run test:imports
+      
       - name: Initialize database
         run: npm run db:init
       
@@ -43,6 +46,10 @@ jobs:
       
       - name: Build Electron
         run: npm run build:electron
+      
+      - name: Verify Asar structure (optional)
+        continue-on-error: true
+        run: npm run test:asar
       
       - name: Create Release and Upload assets
         if: startsWith(github.ref, 'refs/tags/')
