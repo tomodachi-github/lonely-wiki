@@ -121,6 +121,23 @@ function createWindow() {
     writeLog(`[Renderer ${levelName}] ${message}`)
   })
 
+  // 未処理の例外をキャッチ
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    // Handle keyboard shortcuts if needed
+  })
+
+  // レンダラープロセスの予期しないエラーをキャッチ
+  mainWindow.webContents.on('preload-error', (event, preloadPath, error) => {
+    writeLog(`❌ Preload エラー (${preloadPath}): ${error.message}`)
+    writeLog(`スタック: ${error.stack}`)
+  })
+
+  // ウィンドウオープン時の初期化完了をログ
+  mainWindow.once('ready-to-show', () => {
+    writeLog('✅ ウィンドウがレンダリング準備完了')
+    mainWindow.show()
+  })
+
   // レンダラープロセスのエラーをキャッチ
   mainWindow.webContents.on('crashed', () => {
     writeLog('❌ レンダープロセスがクラッシュしました')

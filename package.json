@@ -13,6 +13,7 @@
     "test:modules": "node test-module-loading.js",
     "test:init": "node test-initialization.js",
     "test:renderer": "node test-renderer.js",
+    "test:ipc": "node test-ipc-config.js",
     "test:asar": "node test-asar-structure.js",
     "test": "npm run test:imports && npm run test:init",
     "dev": "concurrently \"npm run dev:vite\" \"wait-on http://localhost:5173 && electron .\"",

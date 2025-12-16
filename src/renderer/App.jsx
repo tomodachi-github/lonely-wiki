@@ -120,13 +120,16 @@ function App() {
   }
 
   useEffect(() => {
+    console.log('🚀 App mounted, initializing...')
     if (view === 'list') {
+      console.log('📝 Loading articles on mount')
       loadArticles(searchKeyword, selectedTag, sortBy, sortOrder)
     }
   }, [])
 
   useEffect(() => {
     if (view === 'list') {
+      console.log('🔄 Sort changed, reloading articles')
       loadArticles(searchKeyword, selectedTag, sortBy, sortOrder)
     }
   }, [sortBy, sortOrder])

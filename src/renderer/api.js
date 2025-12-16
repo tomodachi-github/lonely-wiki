@@ -2,57 +2,94 @@
 class ArticleAPI {
   constructor() {
     if (!window.electronAPI) {
+      console.error('❌ Electron API not available')
       throw new Error('Electron API not available')
     }
+    console.log('✅ Electron API available')
   }
 
   // 記事一覧を取得
   async listArticles(options = {}) {
-    const result = await window.electronAPI.invoke('articles:list', options)
-    if (result.success) {
-      return result.data
-    } else {
-      throw new Error(result.error)
+    try {
+      console.log('📡 IPC invoke: articles:list', options)
+      const result = await window.electronAPI.invoke('articles:list', options)
+      console.log('📡 IPC response: articles:list', result)
+      if (result.success) {
+        return result.data
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ Error in listArticles:', err)
+      throw err
     }
   }
 
   // 記事を UUID で取得
   async getArticleByUuid(uuid) {
-    const result = await window.electronAPI.invoke('articles:getByUuid', uuid)
-    if (result.success) {
-      return result.data
-    } else {
-      throw new Error(result.error)
+    try {
+      console.log('📡 IPC invoke: articles:getByUuid', uuid)
+      const result = await window.electronAPI.invoke('articles:getByUuid', uuid)
+      console.log('📡 IPC response: articles:getByUuid', result)
+      if (result.success) {
+        return result.data
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ Error in getArticleByUuid:', err)
+      throw err
     }
   }
 
   // 新規記事を作成
   async createArticle(title, content = '') {
-    const result = await window.electronAPI.invoke('articles:create', { title, content })
-    if (result.success) {
-      return result.data
-    } else {
-      throw new Error(result.error)
+    try {
+      console.log('📡 IPC invoke: articles:create', { title, content })
+      const result = await window.electronAPI.invoke('articles:create', { title, content })
+      console.log('📡 IPC response: articles:create', result)
+      if (result.success) {
+        return result.data
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ Error in createArticle:', err)
+      throw err
     }
   }
 
   // 記事を更新
   async updateArticle(uuid, title, content) {
-    const result = await window.electronAPI.invoke('articles:update', { uuid, title, content })
-    if (result.success) {
-      return result.data
-    } else {
-      throw new Error(result.error)
+    try {
+      console.log('📡 IPC invoke: articles:update', { uuid, title, content })
+      const result = await window.electronAPI.invoke('articles:update', { uuid, title, content })
+      console.log('📡 IPC response: articles:update', result)
+      if (result.success) {
+        return result.data
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ Error in updateArticle:', err)
+      throw err
     }
   }
 
   // 記事を削除
   async deleteArticle(uuid) {
-    const result = await window.electronAPI.invoke('articles:delete', uuid)
-    if (result.success) {
-      return true
-    } else {
-      throw new Error(result.error)
+    try {
+      console.log('📡 IPC invoke: articles:delete', uuid)
+      const result = await window.electronAPI.invoke('articles:delete', uuid)
+      console.log('📡 IPC response: articles:delete', result)
+      if (result.success) {
+        return true
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ Error in deleteArticle:', err)
+      throw err
     }
   }
 
@@ -88,27 +125,41 @@ class ArticleAPI {
 
   // タグで記事を検索
   async searchByTag(tagName, options = {}) {
-    const result = await window.electronAPI.invoke('articles:searchByTag', {
-      tagName,
-      ...options
-    })
-    if (result.success) {
-      return result.data
-    } else {
-      throw new Error(result.error)
+    try {
+      console.log('📡 IPC invoke: articles:searchByTag', { tagName, ...options })
+      const result = await window.electronAPI.invoke('articles:searchByTag', {
+        tagName,
+        ...options
+      })
+      console.log('📡 IPC response: articles:searchByTag', result)
+      if (result.success) {
+        return result.data
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ Error in searchByTag:', err)
+      throw err
     }
   }
 
   // テキストで記事を検索
   async search(keyword, options = {}) {
-    const result = await window.electronAPI.invoke('articles:search', {
-      keyword,
-      ...options
-    })
-    if (result.success) {
-      return result.data
-    } else {
-      throw new Error(result.error)
+    try {
+      console.log('📡 IPC invoke: articles:search', { keyword, ...options })
+      const result = await window.electronAPI.invoke('articles:search', {
+        keyword,
+        ...options
+      })
+      console.log('📡 IPC response: articles:search', result)
+      if (result.success) {
+        return result.data
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (err) {
+      console.error('❌ Error in search:', err)
+      throw err
     }
   }
 
