@@ -41,6 +41,9 @@ jobs:
       - name: Test initialization
         run: npm run test:init
       
+      - name: Test renderer configuration
+        run: npm run test:renderer
+      
       - name: Initialize database
         run: npm run db:init
       

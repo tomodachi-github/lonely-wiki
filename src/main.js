@@ -108,19 +108,31 @@ function createWindow() {
     : `file://${path.join(__dirname, '../dist/index.html')}`
 
   mainWindow.loadURL(url)
+  writeLog(`📄 ローディング URL: ${url}`)
 
-  // 開発環境または環境変数が設定されている場合に DevTools を開く
+  // ビルド版でも DevTools を一時的に開く（デバッグ用）
   if (isDev || process.env.OPEN_DEVTOOLS === 'true') {
     mainWindow.webContents.openDevTools()
   }
 
-  // ウェブコンテンツのエラーを記録
+  // コンソールメッセージをログに記録
+  mainWindow.webContents.on('console-message', (level, message, line, sourceId) => {
+    const levelName = ['LOG', 'WARNING', 'ERROR', 'DEBUG'][level] || 'UNKNOWN'
+    writeLog(`[Renderer ${levelName}] ${message}`)
+  })
+
+  // レンダラープロセスのエラーをキャッチ
   mainWindow.webContents.on('crashed', () => {
     writeLog('❌ レンダープロセスがクラッシュしました')
   })
 
   mainWindow.webContents.on('unresponsive', () => {
     writeLog('⚠️ レンダープロセスが応答していません')
+  })
+
+  // DOM がロードされたらメッセージを送信
+  mainWindow.webContents.on('dom-ready', () => {
+    writeLog('✅ DOM がロード完了')
   })
 }
 
