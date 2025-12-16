@@ -3,6 +3,9 @@ import { createRequire } from 'module'
 import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs'
+import { initializeDatabase } from './db/database.js'
+import { setupIPCHandlers } from './ipc-handlers.js'
+import { setupAutoUpdate } from './auto-updater.js'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -85,41 +88,7 @@ process.on('unhandledRejection', (reason, promise) => {
   writeLog(message)
 })
 
-// ========== モジュール読み込み（ログ初期化後） ==========
-let initializeDatabase
-let setupIPCHandlers
-let setupAutoUpdate
-
-// Async IIFE でモジュール読み込み
-(async () => {
-  try {
-    const dbModule = await import('./db/database.js')
-    const ipcModule = await import('./ipc-handlers.js')
-    const updateModule = await import('./auto-updater.js')
-
-    initializeDatabase = dbModule.initializeDatabase
-    setupIPCHandlers = ipcModule.setupIPCHandlers
-    setupAutoUpdate = updateModule.setupAutoUpdate
-  } catch (importErr) {
-    console.error('❌ モジュール読み込みエラー:', importErr.message)
-    console.error('スタックトレース:', importErr.stack)
-
-    // 緊急ログ：ファイルに直接書き込み
-    const emergencyLogDir = path.join(process.env.APPDATA || process.env.HOME, 'lonely-wiki-logs')
-    try {
-      fs.mkdirSync(emergencyLogDir, { recursive: true })
-      const emergencyLog = path.join(emergencyLogDir, 'startup-error.log')
-      const timestamp = new Date().toISOString()
-      fs.appendFileSync(emergencyLog, `[${timestamp}] モジュール読み込みエラー: ${importErr.message}\n${importErr.stack}\n`)
-      console.log(`緊急ログを記録しました: ${emergencyLog}`)
-    } catch (e) {
-      console.error('緊急ログ記録失敗:', e)
-    }
-
-    process.exit(1)
-  }
-})()
-
+// ========== 初期化 ==========
 let mainWindow
 
 function createWindow() {
