@@ -1,25 +1,62 @@
 import sqlite3 from 'sqlite3'
-import { readFileSync } from 'fs'
+import { readFileSync, mkdirSync, existsSync } from 'fs'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import { createRequire } from 'module'
 
+const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const DB_PATH = path.join(__dirname, '../../app.db')
+
+/**
+ * アプリケーションのデータベースパスを決定
+ * - ビルド版: userData ディレクトリ（electron app から実行）
+ * - 開発環境: プロジェクトルート（init スクリプトから実行）
+ */
+function getDatabasePath() {
+  try {
+    // Electron app オブジェクトを取得（try-catch で安全に）
+    // ビルド版の場合のみ利用可能
+    const electronModule = require('electron')
+    if (electronModule.app && electronModule.app.isReady()) {
+      const userDataPath = electronModule.app.getPath('userData')
+      return path.join(userDataPath, 'app.db')
+    }
+  } catch (err) {
+    // Electron が未初期化、または npm run db:init で実行された場合
+  }
+
+  // 開発環境: プロジェクトルート
+  return path.join(__dirname, '../../app.db')
+}
+
 const SCHEMA_PATH = path.join(__dirname, './schema.sql')
 
 export class Database {
   constructor() {
     this.db = null
+    this.dbPath = getDatabasePath()
+    this.ensureDataDir()
+  }
+
+  ensureDataDir() {
+    try {
+      const dbDir = path.dirname(this.dbPath)
+      if (!existsSync(dbDir)) {
+        mkdirSync(dbDir, { recursive: true })
+      }
+    } catch (err) {
+      console.error('❌ データベースディレクトリ作成エラー:', err)
+    }
   }
 
   async init() {
     return new Promise((resolve, reject) => {
-      this.db = new sqlite3.Database(DB_PATH, (err) => {
+      this.db = new sqlite3.Database(this.dbPath, (err) => {
         if (err) {
           console.error('❌ データベース接続エラー:', err)
           reject(err)
         } else {
-          console.log(`✅ データベース接続: ${DB_PATH}`)
+          console.log(`✅ データベース接続: ${this.dbPath}`)
           this.createTables()
             .then(() => resolve())
             .catch(reject)

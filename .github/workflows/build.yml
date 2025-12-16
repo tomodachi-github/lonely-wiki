@@ -38,6 +38,9 @@ jobs:
       - name: Test import paths
         run: npm run test:imports
       
+      - name: Test initialization
+        run: npm run test:init
+      
       - name: Initialize database
         run: npm run db:init
       

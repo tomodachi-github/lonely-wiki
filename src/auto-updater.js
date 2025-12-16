@@ -1,6 +1,9 @@
 import { app, dialog, BrowserWindow } from 'electron'
 import { readFileSync } from 'fs'
-import { resolve } from 'path'
+import { fileURLToPath } from 'url'
+import path from 'path'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 /**
  * 更新チェック機能（基本版）
@@ -11,8 +14,8 @@ let updateCheckWindow = null
 
 export async function setupAutoUpdate() {
   try {
-    // Package version を取得
-    const packagePath = resolve(process.cwd(), 'package.json')
+    // Package version を取得（ビルド時のパスを使用）
+    const packagePath = path.join(__dirname, '../../package.json')
     const packageData = JSON.parse(readFileSync(packagePath, 'utf8'))
     const currentVersion = packageData.version
 
