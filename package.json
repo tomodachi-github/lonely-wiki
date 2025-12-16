@@ -7,13 +7,15 @@
   "main": "src/main.js",
   "type": "module",
   "scripts": {
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "dev": "concurrently \"npm run dev:vite\" \"wait-on http://localhost:5173 && electron .\"",
     "dev:vite": "vite",
     "db:init": "node src/db/init.js",
-    "build": "npm run db:init && npm run build:vite && npm run build:electron",
+    "build": "npm run lint && npm run db:init && npm run build:vite && npm run build:electron",
     "build:vite": "vite build",
     "build:electron": "electron-builder --publish never",
-    "build:win": "npm run db:init && npm run build:vite && electron-builder --win --publish never",
+    "build:win": "npm run lint && npm run db:init && npm run build:vite && electron-builder --win --publish never",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -24,10 +26,12 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^8.2.2",
     "electron": "^28.0.0",
     "electron-builder": "^24.6.4",
+    "eslint": "^9.39.2",
     "vite": "^5.0.8",
     "wait-on": "^7.0.1"
   },

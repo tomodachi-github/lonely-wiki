@@ -46,7 +46,7 @@ async function checkForUpdatesManually(currentVersion) {
   try {
     // ここで GitHub API や自社サーバーから最新バージョンを取得
     // 例: https://api.github.com/repos/owner/repo/releases/latest
-    
+
     dialog.showMessageBox({
       type: 'info',
       title: '更新チェック',
@@ -72,7 +72,7 @@ export function showUpdateDialog(latestVersion, downloadUrl) {
   return dialog.showMessageBox({
     type: 'info',
     title: '更新利用可能',
-    message: `Lonely Wiki 更新が利用可能です`,
+    message: 'Lonely Wiki 更新が利用可能です',
     detail: `最新バージョン: ${latestVersion}\n\n今すぐダウンロードしますか？`,
     buttons: ['ダウンロード', 'あとで', 'キャンセル'],
     defaultId: 0,

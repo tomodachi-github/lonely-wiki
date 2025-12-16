@@ -88,9 +88,9 @@ class ArticleAPI {
 
   // タグで記事を検索
   async searchByTag(tagName, options = {}) {
-    const result = await window.electronAPI.invoke('articles:searchByTag', { 
-      tagName, 
-      ...options 
+    const result = await window.electronAPI.invoke('articles:searchByTag', {
+      tagName,
+      ...options
     })
     if (result.success) {
       return result.data
@@ -101,9 +101,9 @@ class ArticleAPI {
 
   // テキストで記事を検索
   async search(keyword, options = {}) {
-    const result = await window.electronAPI.invoke('articles:search', { 
-      keyword, 
-      ...options 
+    const result = await window.electronAPI.invoke('articles:search', {
+      keyword,
+      ...options
     })
     if (result.success) {
       return result.data

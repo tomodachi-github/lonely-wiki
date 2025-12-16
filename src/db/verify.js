@@ -20,20 +20,20 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
     }
 
     console.log('\n📊 データベーススキーマ検証:\n')
-    
+
     tables.forEach(table => {
       db.all(`PRAGMA table_info(${table.name})`, (err, columns) => {
         if (err) {
           console.error('❌ エラー:', err)
           return
         }
-        
+
         console.log(`📌 ${table.name}:`)
         columns.forEach(col => {
           console.log(`   ├─ ${col.name} (${col.type})`)
         })
         console.log()
-        
+
         // 全テーブル確認後に終了
         if (table.name === tables[tables.length - 1].name) {
           db.close()
